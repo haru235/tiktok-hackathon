@@ -9,7 +9,7 @@ module.exports = {
         customRed: '#d23e52',
         customBrighterRed: '#e34d61',
         customTeal: '#34e1dc',
-        customBeige: '#e1dad6',
+        customBeige: '#f2efed',
       },
     },
   },
