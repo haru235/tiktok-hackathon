@@ -4,30 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TikTok Shop Content Submission</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        form { margin-bottom: 20px; }
-        textarea { width: 100%; height: 100px; }
-        ul { list-style-type: none; padding: 0; }
-        li { background-color: #f0f0f0; margin-bottom: 10px; padding: 10px; }
-        #notifications { background-color: #e6ffe6; padding: 10px; margin-bottom: 20px; display: none; }
-    </style>
+    <link rel="stylesheet" href="/dist/tailwind.css">
 </head>
-<body>
-    <h1>TikTok Shop Content Submission</h1>
-    <div id="notifications"></div>
-    <form id="contentForm">
-        <textarea name="content" placeholder="Enter your content here" required></textarea>
+<body class="font-sans max-w-2xl mx-auto p-5">
+    <h1 class="text-2xl font-bold mb-4">TikTok Shop Content Submission</h1>
+    <div id="notifications" class="bg-green-100 p-4 mb-4 hidden"></div>
+    <form id="contentForm" class="mb-4">
+        <textarea name="content" placeholder="Enter your content here" required class="w-full h-24 p-2 border border-gray-300 rounded"></textarea>
         <br>
-        <button type="submit">Submit Content</button>
+        <button type="submit" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">Submit Content</button>
     </form>
-    <h2>Previously Submitted Content</h2>
-    <ul id="content-list">
+    <h2 class="text-xl font-semibold mb-2">Previously Submitted Content</h2>
+    <ul id="content-list" class="list-none p-0">
         {{range .}}
-            <li>{{.}}</li>
+            <li class="bg-gray-100 mb-2 p-2 rounded">{{.}}</li>
         {{end}}
     </ul>
-
     <script src="/dist/app.js"></script>
 </body>
 </html>
