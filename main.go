@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"encoding/json"
 	"html/template"
 	"log"
@@ -9,13 +8,10 @@ import (
 	"os"
 	"time"
 
-	_ "github.com/go-sql-driver/mysql"
-	//"github.com/go-redis/redis/v8"
 	"github.com/gorilla/websocket"
 	"github.com/redis/go-redis/v9"
 )
 
-var db *sql.DB
 var redisClient *redis.Client
 
 var upgrader = websocket.Upgrader{
@@ -29,18 +25,13 @@ type Content struct {
 }
 
 func main() {
-	var err error
-
-	// dbURL := os.Getenv("JAWSDB_URL")
-	// if dbURL == "" {
-	// 	log.Fatal("JAWSDB_URL environment variable is not set")
+	// Database initialization commented out
+	// var err error
+	// db, err = sql.Open("mysql", "root:Headstarter-ehhms5@tcp(127.0.0.1:3306)/tiktok_hackathon")
+	// if err != nil {
+	//     log.Fatal(err)
 	// }
-	// db, err = sql.Open("mysql", dbURL)
-	db, err = sql.Open("mysql", "root:Headstarter-ehhms5@tcp(127.0.0.1:3306)/tiktok_hackathon")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
+	// defer db.Close()
 
 	redisClient = redis.NewClient(&redis.Options{
 		Addr: "localhost:6379",
@@ -62,11 +53,12 @@ func main() {
 }
 
 func handleIndex(w http.ResponseWriter, r *http.Request) {
-	contents, err := getContents()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	// Commented out content retrieval from the database
+	// contents, err := getContents()
+	// if err != nil {
+	//     http.Error(w, err.Error(), http.StatusInternalServerError)
+	//     return
+	// }
 
 	tmpl, err := template.ParseFiles("index.html")
 	if err != nil {
@@ -74,7 +66,8 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tmpl.Execute(w, contents)
+	// Passing nil instead of contents to the template
+	tmpl.Execute(w, nil)
 }
 
 func handleSubmit(w http.ResponseWriter, r *http.Request) {
@@ -89,11 +82,12 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := db.Exec("INSERT INTO content (text_content) VALUES (?)", content)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	// Commented out the database insertion
+	// _, err := db.Exec("INSERT INTO content (text_content) VALUES (?)", content)
+	// if err != nil {
+	//     http.Error(w, err.Error(), http.StatusInternalServerError)
+	//     return
+	// }
 
 	// Publish new content to Redis
 	newContent := Content{
@@ -101,7 +95,7 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 		Timestamp: time.Now(),
 	}
 	jsonContent, _ := json.Marshal(newContent)
-	err = redisClient.Publish(r.Context(), "new_content", jsonContent).Err()
+	err := redisClient.Publish(r.Context(), "new_content", jsonContent).Err()
 	if err != nil {
 		log.Printf("Error publishing to Redis: %v", err)
 	}
@@ -136,21 +130,22 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getContents() ([]string, error) {
-	rows, err := db.Query("SELECT text_content FROM content ORDER BY created_at DESC")
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
+// Commented out the getContents function
+// func getContents() ([]string, error) {
+//     rows, err := db.Query("SELECT text_content FROM content ORDER BY created_at DESC")
+//     if err != nil {
+//         return nil, err
+//     }
+//     defer rows.Close()
 
-	var contents []string
-	for rows.Next() {
-		var content string
-		if err := rows.Scan(&content); err != nil {
-			return nil, err
-		}
-		contents = append(contents, content)
-	}
+//     var contents []string
+//     for rows.Next() {
+//         var content string
+//         if err := rows.Scan(&content); err != nil {
+//             return nil, err
+//         }
+//         contents = append(contents, content)
+//     }
 
-	return contents, nil
-}
+//     return contents, nil
+// }

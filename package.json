@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "heroku-postbuild": "npm run build"
+    "build": "tsc && npx postcss src/styles/tailwind.css -o dist/tailwind.css",
+    "watch:css": "npx tailwindcss -i ./src/styles/tailwind.css -o ./dist/tailwind.css --watch",
+    "watch:go": "reflex -r '\\.go$' -s -- sh -c 'go run main.go'",
+    "dev": "concurrently \"npm run watch:css\" \"npm run watch:go\""
   },
   "keywords": [],
   "author": "",
@@ -14,6 +15,13 @@
   "devDependencies": {
     "@types/node": "^22.4.0",
     "@types/websocket": "^1.0.10",
+    "concurrently": "^8.2.2",
     "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.41",
+    "postcss-cli": "^11.0.0",
+    "tailwindcss": "^3.4.10"
   }
 }

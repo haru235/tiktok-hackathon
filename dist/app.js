@@ -1,5 +1,7 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // src/app.ts
+require("./styles/tailwind.css");
 const socket = new WebSocket('ws://' + window.location.host + '/ws');
 const notifications = document.getElementById('notifications');
 const contentList = document.getElementById('content-list');
