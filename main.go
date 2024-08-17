@@ -3,12 +3,10 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -31,27 +29,12 @@ type Content struct {
 }
 
 func main() {
-	var err error
-
 	dbURL := os.Getenv("JAWSDB_URL")
 	if dbURL == "" {
 		log.Fatal("JAWSDB_URL environment variable is not set")
 	}
-
-	// Parse the connection string
-	connectionParts := strings.Split(dbURL, "://")
-	if len(connectionParts) != 2 {
-		log.Fatal("Invalid JAWSDB_URL format")
-	}
-
-	userPass := strings.Split(connectionParts[0], ":")
-	hostDBParts := strings.Split(connectionParts[1], "/")
-	host := strings.Split(hostDBParts[0], "@")[1]
-	dbName := hostDBParts[1]
-
-	dbConnectionString := fmt.Sprintf("%s@tcp(%s)/%s?parseTime=true",
-		userPass[0], host, dbName)
-	db, err := sql.Open("mysql", dbConnectionString)
+	var err error
+	db, err = sql.Open("mysql", dbURL)
 	//db, err = sql.Open("mysql", "root:Headstarter-ehhms5@tcp(127.0.0.1:3306)/tiktok_hackathon")
 	if err != nil {
 		log.Fatal(err)
