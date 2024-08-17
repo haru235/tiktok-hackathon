@@ -1,1 +1,1 @@
-web: ./tiktok_hackathon.exe
+web: ./tiktok_hackathon
