@@ -2,8 +2,9 @@
 .env*
 
 # Node modules
-node_modules/
+node_modules
 
 # Build files
 dist/
 node_modules
+.next/
