@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { firestore } from "@/firebase";
 
 import {
   collection,
@@ -15,20 +14,6 @@ import {
 function LoginPage() {
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyDUnwfRi1PZ4OMt14OLacLRJo7wWuLnI5U",
-    authDomain: "tiktik-hackathon.firebaseapp.com",
-    projectId: "tiktik-hackathon",
-    storageBucket: "tiktik-hackathon.appspot.com",
-    messagingSenderId: "638097584204",
-    appId: "1:638097584204:web:cbf9194841f693565cc4e9",
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const firestore = getFirestore(app);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
