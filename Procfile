@@ -1,1 +1,1 @@
-web: tiktok-hackathon
+web: ./tiktok-hackathon
