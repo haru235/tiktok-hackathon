@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 	//"github.com/go-redis/redis/v8"
 	"github.com/gorilla/websocket"
 	"github.com/redis/go-redis/v9"
@@ -36,7 +36,8 @@ func main() {
 	// 	log.Fatal("JAWSDB_URL environment variable is not set")
 	// }
 	// db, err = sql.Open("mysql", dbURL)
-	db, err = sql.Open("mysql", "root:Headstarter-ehhms5@tcp(127.0.0.1:3306)/tiktok_hackathon")
+	connStr := "user=evanthoms password=password dbname=tiktok_hackathon sslmode=disable"
+	db, err = sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -89,7 +90,7 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := db.Exec("INSERT INTO content (text_content) VALUES (?)", content)
+	_, err := db.Exec("INSERT INTO content (text_content) VALUES ($1)", content)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
