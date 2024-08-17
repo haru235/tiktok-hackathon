@@ -1,1 +1,1 @@
-web: ./tiktok_hackathon
+web: go run main.go

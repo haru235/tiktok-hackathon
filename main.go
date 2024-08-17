@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -32,8 +33,25 @@ type Content struct {
 func main() {
 	var err error
 
-	dbUrl := os.Getenv("mysql://zay3synzexd15a0m:ifxanxf2u76wimox@mkorvuw3sl6cu9ms.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/q6pc22iwv9l0oj3u")
-	db, err := sql.Open("mysql", dbUrl)
+	dbURL := os.Getenv("JAWSDB_URL")
+	if dbURL == "" {
+		log.Fatal("JAWSDB_URL environment variable is not set")
+	}
+
+	// Parse the connection string
+	connectionParts := strings.Split(dbURL, "://")
+	if len(connectionParts) != 2 {
+		log.Fatal("Invalid JAWSDB_URL format")
+	}
+
+	userPass := strings.Split(connectionParts[0], ":")
+	hostDBParts := strings.Split(connectionParts[1], "/")
+	host := strings.Split(hostDBParts[0], "@")[1]
+	dbName := hostDBParts[1]
+
+	dbConnectionString := fmt.Sprintf("%s@tcp(%s)/%s?parseTime=true",
+		userPass[0], host, dbName)
+	db, err := sql.Open("mysql", dbConnectionString)
 	//db, err = sql.Open("mysql", "root:Headstarter-ehhms5@tcp(127.0.0.1:3306)/tiktok_hackathon")
 	if err != nil {
 		log.Fatal(err)
@@ -50,8 +68,13 @@ func main() {
 
 	http.Handle("/dist/", http.StripPrefix("/dist/", http.FileServer(http.Dir("dist"))))
 
-	fmt.Println("Server is running on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Default port if not specified
+	}
+
+	log.Printf("Server is running on :%s", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
 func handleIndex(w http.ResponseWriter, r *http.Request) {
