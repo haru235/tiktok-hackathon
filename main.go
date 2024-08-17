@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -30,7 +31,10 @@ type Content struct {
 
 func main() {
 	var err error
-	db, err = sql.Open("mysql", "root:Headstarter-ehhms5@tcp(127.0.0.1:3306)/tiktok_hackathon")
+
+	dbUrl := os.Getenv("mysql://zay3synzexd15a0m:ifxanxf2u76wimox@mkorvuw3sl6cu9ms.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/q6pc22iwv9l0oj3u")
+	db, err := sql.Open("mysql", dbUrl)
+	//db, err = sql.Open("mysql", "root:Headstarter-ehhms5@tcp(127.0.0.1:3306)/tiktok_hackathon")
 	if err != nil {
 		log.Fatal(err)
 	}
