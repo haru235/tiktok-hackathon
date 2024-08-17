@@ -114,6 +114,8 @@
     "slick-carousel": "^1.8.1",
     "source-map": "^0.7.4",
     "source-map-support": "^0.5.21",
+    "string-width": "^4.2.3",
+    "strip-ansi": "^6.0.0",
     "supports-color": "^7.2.0",
     "supports-preserve-symlinks-flag": "^1.0.0",
     "tapable": "^2.2.1",
