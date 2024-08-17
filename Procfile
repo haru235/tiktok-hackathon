@@ -1,1 +1,1 @@
-web: ./tiktok-hackathon
+web: go run .
