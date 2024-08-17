@@ -7,14 +7,14 @@
     <link rel="stylesheet" href="/dist/tailwind.css">
 </head>
 <body class="font-sans max-w-2xl mx-auto p-5">
-    <h1 class="text-2xl font-bold mb-4">TikTok Shop Content Submission</h1>
+    <h1 class="text-red-500 text-xl font-bold mb-4">TikTok</h1> <!-- Changed text color to red -->
     <div id="notifications" class="bg-green-100 p-4 mb-4 hidden"></div>
     <form id="contentForm" class="mb-4">
         <textarea name="content" placeholder="Enter your content here" required class="w-full h-24 p-2 border border-gray-300 rounded"></textarea>
         <br>
-        <button type="submit" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">Submit Content</button>
+        <button type="submit" class="mt-2 bg-orange-500 text-white px-4 py-2 rounded">Submit Content</button> <!-- Changed button color to orange -->
     </form>
-    <h2 class="text-xl font-semibold mb-2">Previously Submitted Content</h2>
+    <h2 class="text-blue-500 text-xl font-semibold mb-2">Previously Submitted Content</h2> <!-- Changed text color to red -->
     <ul id="content-list" class="list-none p-0">
         {{range .}}
             <li class="bg-gray-100 mb-2 p-2 rounded">{{.}}</li>
