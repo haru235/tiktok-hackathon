@@ -3,29 +3,33 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "tsc && npx postcss src/styles/tailwind.css -o dist/tailwind.css",
-    "watch:css": "npx tailwindcss -i ./src/styles/tailwind.css -o ./dist/tailwind.css --watch",
-    "watch:go": "reflex -r '\\.go$' -s -- sh -c 'go run main.go'",
-    "dev": "concurrently \"npm run watch:css\" \"npm run watch:go\""
+    "dev": "concurrently \"npm run watch:css\" \"npm run watch:go\" \"next dev\"",
+    "build": "next build",
+    "start": "next start",
+    "watch:css": "postcss src/styles/tailwind.css -o dist/tailwind.css --watch",
+    "watch:go": "go run main.go"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^22.4.0",
+    "@types/react": "18.3.3",
     "@types/websocket": "^1.0.10",
+    "concurrently": "^8.2.2",
     "ts-loader": "^9.5.1",
     "typescript": "^5.5.4",
     "webpack": "^5.93.0",
-    "webpack-cli": "^5.1.4",
-    "concurrently": "^8.2.2"
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "@babel/runtime": "^7.25.0",
     "acorn": "^8.12.1",
     "acorn-import-attributes": "^1.9.5",
     "ajv": "^6.12.6",
     "ajv-keywords": "^3.5.2",
     "ansi-styles": "^4.3.0",
+    "autoprefixer": "^10.4.20",
     "braces": "^3.0.3",
     "browserslist": "^4.23.3",
     "buffer-from": "^1.1.2",
@@ -76,6 +80,7 @@
     "mime-db": "^1.52.0",
     "mime-types": "^2.1.35",
     "neo-async": "^2.6.2",
+    "next": "^14.2.5",
     "node-releases": "^2.0.18",
     "p-limit": "^2.3.0",
     "p-locate": "^4.1.0",
@@ -86,8 +91,12 @@
     "picocolors": "^1.0.1",
     "picomatch": "^2.3.1",
     "pkg-dir": "^4.2.0",
+    "postcss": "^8.4.41",
+    "postcss-cli": "^11.0.0",
     "punycode": "^2.3.1",
     "randombytes": "^2.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "rechoir": "^0.8.0",
     "resolve": "^1.22.8",
     "resolve-cwd": "^3.0.0",
@@ -103,6 +112,7 @@
     "source-map-support": "^0.5.21",
     "supports-color": "^7.2.0",
     "supports-preserve-symlinks-flag": "^1.0.0",
+    "tailwindcss": "^3.4.10",
     "tapable": "^2.2.1",
     "terser": "^5.31.6",
     "terser-webpack-plugin": "^5.3.10",
@@ -114,11 +124,6 @@
     "webpack-merge": "^5.10.0",
     "webpack-sources": "^3.2.3",
     "which": "^2.0.2",
-    "wildcard": "^2.0.1",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.41",
-    "postcss-cli": "^11.0.0",
-    "tailwindcss": "^3.4.10"
+    "wildcard": "^2.0.1"
   }
 }
-
