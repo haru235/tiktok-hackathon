@@ -1,1 +1,1 @@
-web: bin/tiktok-hackathon
+web: tiktok-hackathon
