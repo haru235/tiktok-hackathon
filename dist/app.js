@@ -1,4 +1,5 @@
 "use strict";
+
 Object.defineProperty(exports, "__esModule", { value: true });
 // src/app.ts
 require("./styles/tailwind.css");

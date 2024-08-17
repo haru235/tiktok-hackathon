@@ -1,9 +1,11 @@
+
 export default function Home() {
-    return (
-      <div>
-        <h1>Welcome to TikTok Hackathon Project</h1>
-        <p>This is the homepage.</p>
-      </div>
-    );
-  }
-  
+  return (
+    <>
+      <h1 className='text-red-500'>Home</h1>
+
+      <p className="text-yellow-200">teeeeeeeeeeeeeest</p>
+
+    </>
+  );
+}
