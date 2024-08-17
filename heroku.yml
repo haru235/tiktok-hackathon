@@ -1,8 +1,7 @@
 build:
-  language: go
   config:
     go:
-      build:
-        - go build -o bin/tiktok-hackathon
+      build: go build -o bin/tiktok-hackathon
+
 run:
   web: ./bin/tiktok-hackathon
