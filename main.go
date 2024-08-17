@@ -29,13 +29,14 @@ type Content struct {
 }
 
 func main() {
-	dbURL := os.Getenv("JAWSDB_URL")
-	if dbURL == "" {
-		log.Fatal("JAWSDB_URL environment variable is not set")
-	}
 	var err error
-	db, err = sql.Open("mysql", dbURL)
-	//db, err = sql.Open("mysql", "root:Headstarter-ehhms5@tcp(127.0.0.1:3306)/tiktok_hackathon")
+
+	// dbURL := os.Getenv("JAWSDB_URL")
+	// if dbURL == "" {
+	// 	log.Fatal("JAWSDB_URL environment variable is not set")
+	// }
+	// db, err = sql.Open("mysql", dbURL)
+	db, err = sql.Open("mysql", "root:Headstarter-ehhms5@tcp(127.0.0.1:3306)/tiktok_hackathon")
 	if err != nil {
 		log.Fatal(err)
 	}
