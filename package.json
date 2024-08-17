@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "heroku-postbuild": "npm run build"
+    "build": "tsc && npx postcss src/styles/tailwind.css -o dist/tailwind.css",
+    "watch:css": "npx tailwindcss -i ./src/styles/tailwind.css -o ./dist/tailwind.css --watch",
+    "watch:go": "reflex -r '\\.go$' -s -- sh -c 'go run main.go'",
+    "dev": "concurrently \"npm run watch:css\" \"npm run watch:go\""
   },
   "keywords": [],
   "author": "",
@@ -16,7 +17,8 @@
     "ts-loader": "^9.5.1",
     "typescript": "^5.5.4",
     "webpack": "^5.93.0",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "concurrently": "^8.2.2"
   },
   "dependencies": {
     "acorn": "^8.12.1",
@@ -112,7 +114,11 @@
     "webpack-merge": "^5.10.0",
     "webpack-sources": "^3.2.3",
     "which": "^2.0.2",
-    "wildcard": "^2.0.1"
-  },
-  "description": ""
+    "wildcard": "^2.0.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.41",
+    "postcss-cli": "^11.0.0",
+    "tailwindcss": "^3.4.10"
+  }
 }
+

@@ -1,4 +1,6 @@
 // src/app.ts
+import './styles/tailwind.css';
+
 
 const socket = new WebSocket('ws://' + window.location.host + '/ws');
 const notifications = document.getElementById('notifications') as HTMLDivElement;
