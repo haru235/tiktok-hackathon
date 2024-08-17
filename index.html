@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Shop Content Submission</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        form { margin-bottom: 20px; }
+        textarea { width: 100%; height: 100px; }
+        ul { list-style-type: none; padding: 0; }
+        li { background-color: #f0f0f0; margin-bottom: 10px; padding: 10px; }
+        #notifications { background-color: #e6ffe6; padding: 10px; margin-bottom: 20px; display: none; }
+    </style>
+</head>
+<body>
+    <h1>TikTok Shop Content Submission</h1>
+    <div id="notifications"></div>
+    <form id="contentForm">
+        <textarea name="content" placeholder="Enter your content here" required></textarea>
+        <br>
+        <button type="submit">Submit Content</button>
+    </form>
+    <h2>Previously Submitted Content</h2>
+    <ul id="content-list">
+        {{range .}}
+            <li>{{.}}</li>
+        {{end}}
+    </ul>
+
+    <script src="/dist/app.js"></script>
+</body>
+</html>
