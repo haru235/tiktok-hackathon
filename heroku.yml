@@ -1,7 +1,0 @@
----
-build:
-  config:
-    go:
-      build: go build -o bin/tiktok-hackathon
-run:
-  web: ./bin/tiktok-hackathon
