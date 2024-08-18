@@ -37,8 +37,5 @@ jspm_packages
 .node_repl_history
 .next
 
-# stop .next from showing up in git status
-.next/
-
 # Environment
 .env*

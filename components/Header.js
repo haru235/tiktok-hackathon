@@ -83,7 +83,7 @@ const Header = () => {
                 </svg>
             </div>
 
-            <a className="cursor-pointer hover:text-customRed">
+            <a className="cursor-pointer hover:text-customRed" href="/login">
                 Log in
             </a>
             <a className="px-5 py-2 rounded cursor-pointer bg-customRed hover:bg-customBrighterRed">
