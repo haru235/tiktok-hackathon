@@ -114,7 +114,8 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 
 	// Insert content into the database
 	log.Printf("Inserting content into database: %+v", content)
-	_, err := db.Exec("INSERT INTO content (title, description, image_url) VALUES ($1, $2, $3)", content.Title, content.Description, content.ImageURL)
+	_, err := db.Exec("INSERT INTO content (text_content) VALUES ($1)", content.Title)
+	//_, err := db.Exec("INSERT INTO content (title, description, image_url) VALUES ($1, $2, $3)", content.Title, content.Description, content.ImageURL)
 	if err != nil {
 		log.Printf("Error inserting content into database: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
