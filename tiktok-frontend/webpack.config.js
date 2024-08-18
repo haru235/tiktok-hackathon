@@ -1,21 +1,14 @@
-const path = require('path');
+import { resolve as _resolve } from 'path';
 
-module.exports = {
-  entry: './src/app.ts',
-  module: {
-    rules: [
-      {
-        test: /\.ts$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
-    ],
-  },
-  resolve: {
-    extensions: ['.ts', '.js'],
-  },
-  output: {
+export const entry = './pages/index.js';
+export const output = {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-  },
+    path: _resolve(__dirname, 'dist'),
 };
+export const resolve = {
+    extensions: ['.js'],
+};
+export const module = {
+    rules: [],
+};
+export const devtool = 'source-map';
