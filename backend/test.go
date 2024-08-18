@@ -16,7 +16,11 @@ var db *sql.DB
 func main() {
 	var err error
 	// Replace with your actual database connection string
-	connStr := "user=evanthoms dbname=mydatabase sslmode=disable"
+	// connStr := "user=evanthoms dbname=mydatabase sslmode=disable"
+
+	// for awab -- just changed username to postgres
+	connStr := "user=postgres dbname=mydatabase sslmode=disable"
+
 	db, err = sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal(err)
