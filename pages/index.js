@@ -5,7 +5,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Footer from "../components/Footer";
-
+import Cookies from 'js-cookie';
 
 
 // Sample content data for the cards
@@ -69,7 +69,8 @@ const sliderSettings = {
 
 export default function Home() {
 
-
+  // get user from cookie
+  var user_cookie = Cookies.get('user');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -81,6 +82,17 @@ export default function Home() {
     setContent('');
   };
 
+  // parse the user_info cookie into a variable
+  if (user_cookie) {
+    var user_info = JSON.parse(user_cookie);
+  } else {
+    var user_info = {
+      fname: "",
+      lname: "",
+      username: "",
+    }
+  }
+  console.log(user_info);
 
 
   return (

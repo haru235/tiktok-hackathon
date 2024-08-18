@@ -81,6 +81,7 @@
     "isexe": "^2.0.0",
     "isobject": "^3.0.1",
     "jest-worker": "^27.5.1",
+    "js-cookie": "^3.0.5",
     "json-parse-even-better-errors": "^2.3.1",
     "json-schema-traverse": "^0.4.1",
     "kind-of": "^6.0.3",
