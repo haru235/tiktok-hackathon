@@ -143,7 +143,7 @@ function LoginPage() {
               justifyContent: "center",
             }}
             variant="extended"
-            onClick={handleBack}
+            onClick={handleSubmit}
           >
             <Typography variant="p" color={"blue"} textTransform={'lowercase'}>
               Login
