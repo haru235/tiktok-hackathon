@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -46,9 +45,13 @@ func main() {
 	}
 	defer db.Close()
 
-	redisURL := os.Getenv("REDIS_URL")
+	redisAddr := os.Getenv("REDIS_URL")
+	if redisAddr == "" {
+		redisAddr = "localhost:6379" // Default value
+	}
+
 	redisClient = redis.NewClient(&redis.Options{
-		Addr: redisURL,
+		Addr: redisAddr,
 	})
 
 	// CORS setup
@@ -58,29 +61,37 @@ func main() {
 		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
 	)
 
-	http.HandleFunc("/", handleIndex)
-	http.HandleFunc("/submit", handleSubmit)
-	http.HandleFunc("/ws", handleWebSocket)
-	http.Handle("/dist/", http.StripPrefix("/dist/", http.FileServer(http.Dir("dist"))))
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", handleIndex)
+	mux.HandleFunc("/submit", handleSubmit)
+	mux.HandleFunc("/ws", handleWebSocket)
+	mux.Handle("/dist/", http.StripPrefix("/dist/", http.FileServer(http.Dir("dist"))))
 
 	log.Printf("Server is running on :%s", port)
-	log.Fatal(http.ListenAndServe(":"+port, corsHandler(http.DefaultServeMux)))
+	log.Fatal(http.ListenAndServe(":"+port, corsHandler(mux)))
 }
 
 func handleIndex(w http.ResponseWriter, r *http.Request) {
+	// Set CORS headers
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	// Get contents from the database
 	contents, err := getContents()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	tmpl, err := template.ParseFiles("index.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	// Set the response header for JSON
+	w.Header().Set("Content-Type", "application/json")
+
+	// Encode contents to JSON and write to response
+	if err := json.NewEncoder(w).Encode(contents); err != nil {
+		http.Error(w, "Error encoding JSON", http.StatusInternalServerError)
 		return
 	}
-
-	tmpl.Execute(w, contents)
 }
 
 type Content struct {
@@ -114,8 +125,7 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 
 	// Insert content into the database
 	log.Printf("Inserting content into database: %+v", content)
-	_, err := db.Exec("INSERT INTO content (text_content) VALUES ($1)", content.Title)
-	//_, err := db.Exec("INSERT INTO content (title, description, image_url) VALUES ($1, $2, $3)", content.Title, content.Description, content.ImageURL)
+	_, err := db.Exec("INSERT INTO content (title, description, image_url) VALUES ($1, $2, $3)", content.Title, content.Description, content.ImageURL)
 	if err != nil {
 		log.Printf("Error inserting content into database: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -133,7 +143,8 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Printf("Content successfully handled: %+v", content)
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 }
 
 func handleWebSocket(w http.ResponseWriter, r *http.Request) {
@@ -163,17 +174,17 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getContents() ([]string, error) {
-	rows, err := db.Query("SELECT text_content FROM content ORDER BY created_at DESC")
+func getContents() ([]Content, error) {
+	rows, err := db.Query("SELECT title, description, image_url FROM content ORDER BY created_at DESC")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var contents []string
+	var contents []Content
 	for rows.Next() {
-		var content string
-		if err := rows.Scan(&content); err != nil {
+		var content Content
+		if err := rows.Scan(&content.Title, &content.Description, &content.ImageURL); err != nil {
 			return nil, err
 		}
 		contents = append(contents, content)

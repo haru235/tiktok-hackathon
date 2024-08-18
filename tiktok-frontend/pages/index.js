@@ -1,4 +1,5 @@
-import { useState } from "react";
+"use client"
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Card from "../components/Card";
 import Slider from "react-slick";
@@ -79,22 +80,6 @@ const getBackendUrl = () => {
   return url;
 };
 
-// const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
-// const socket = new WebSocket(`${backendUrl.replace('https', 'wss')}/ws`);
-// const notifications = document.getElementById('notifications');
-// socket.onmessage = function (event) {
-//     const content = JSON.parse(event.data);
-//     notifications.style.display = 'block';
-//     notifications.innerHTML = `New content added: "${content.text}" at ${new Date(content.timestamp).toLocaleString()}`;
-//     const newItem = document.createElement('li');
-//     newItem.textContent = content.text;
-//     contentList.insertBefore(newItem, contentList.firstChild);
-//     setTimeout(() => {
-//         notifications.style.display = 'none';
-//     }, 10000);
-// };
-
-
 export default function Home() {
 
   // get user from cookie
@@ -103,6 +88,38 @@ export default function Home() {
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [content, setContent] = useState(suggestedContent);
+
+  useEffect(() => {
+    // Fetch initial contents
+    async function fetchData() {
+      const res = await fetch(getBackendUrl());
+      const data = await res.json();
+      setContent(data);
+    }
+
+    fetchData();
+
+    // Set up WebSocket connection
+    const socket = new WebSocket(`wss://${getBackendUrl().split("//")[1]}/ws`);
+
+    socket.onmessage = (event) => {
+      const newContent = JSON.parse(event.data);
+      setContent((prevContents) => [newContent, ...prevContents]);
+    };
+
+    socket.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
+
+    socket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    // Cleanup on component unmount
+    return () => {
+      socket.close();
+    };
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -114,7 +131,7 @@ export default function Home() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({title, description, imageUrl})
+      body: JSON.stringify({ title, description, imageUrl })
     }).then(response => {
       if (response.ok) {
         console.log('Content submitted successfully');
