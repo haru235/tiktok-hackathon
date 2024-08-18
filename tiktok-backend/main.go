@@ -10,6 +10,7 @@ import (
 
 	//"time"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/websocket"
 	_ "github.com/lib/pq"
 	"github.com/redis/go-redis/v9"
@@ -50,13 +51,20 @@ func main() {
 		Addr: redisURL,
 	})
 
+	// CORS setup
+	corsHandler := handlers.CORS(
+		handlers.AllowedOrigins([]string{"https://tiktok-frontend.onrender.com"}), // Change this to the domain(s) you want to allow
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
+		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
+	)
+
 	http.HandleFunc("/", handleIndex)
 	http.HandleFunc("/submit", handleSubmit)
 	http.HandleFunc("/ws", handleWebSocket)
 	http.Handle("/dist/", http.StripPrefix("/dist/", http.FileServer(http.Dir("dist"))))
 
 	log.Printf("Server is running on :%s", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Fatal(http.ListenAndServe(":"+port, corsHandler(http.DefaultServeMux)))
 }
 
 func handleIndex(w http.ResponseWriter, r *http.Request) {
