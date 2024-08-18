@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "watch:css": "postcss src/styles/tailwind.css -o dist/tailwind.css --watch",
-    "watch:go": "go run main.go"
+    "watch:go": "go run main.go",
+    "export": "next export"
   },
   "keywords": [],
   "author": "",
