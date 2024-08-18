@@ -66,6 +66,19 @@ const sliderSettings = {
   ]
 };
 
+const getBackendUrl = () => {
+  const url = process.env.NEXT_PUBLIC_BACKEND_URL;
+  if (!url) {
+    console.warn('NEXT_PUBLIC_BACKEND_URL is not set. Falling back to http://localhost:8080');
+    return 'http://localhost:8080';
+  }
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    console.warn(`Invalid NEXT_PUBLIC_BACKEND_URL: ${url}. It must start with http:// or https://`);
+    return 'http://localhost:8080';
+  }
+  return url;
+};
+
 // const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
 // const socket = new WebSocket(`${backendUrl.replace('https', 'wss')}/ws`);
 // const notifications = document.getElementById('notifications');
@@ -94,7 +107,9 @@ export default function Home() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Content submitted:', title, description, imageUrl);
-    fetch('/api/submit', {
+    const backendUrl = getBackendUrl();
+    console.log(`Using backend URL: ${backendUrl}`);
+    fetch(`${backendUrl}/submit`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
