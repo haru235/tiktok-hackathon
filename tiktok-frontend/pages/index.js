@@ -183,7 +183,7 @@ export default function Home() {
         <section className="mt-10 p-6 py-20 bg-white rounded-lg">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Suggested Content</h2>
           <Slider {...sliderSettings}>
-            {suggestedContent.map((content, index) => (
+            {content.map((content, index) => (
               <div key={index}>
                 <Card
                   title={content.title}
