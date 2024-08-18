@@ -7,7 +7,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
+
+	//"time"
 
 	"github.com/gorilla/websocket"
 	_ "github.com/lib/pq"
@@ -20,11 +21,6 @@ var redisClient *redis.Client
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
-}
-
-type Content struct {
-	Text      string    `json:"text"`
-	Timestamp time.Time `json:"timestamp"`
 }
 
 func main() {
@@ -79,34 +75,55 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, contents)
 }
 
+type Content struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	ImageURL    string `json:"imageUrl"`
+}
+
 func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
+		log.Printf("Received %s request, but POST is required", r.Method)
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	content := r.FormValue("content")
-	if content == "" {
-		http.Error(w, "Content cannot be empty", http.StatusBadRequest)
+	// Parse the JSON body
+	var content Content
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&content); err != nil {
+		log.Printf("Error decoding request body: %v", err)
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	_, err := db.Exec("INSERT INTO content (text_content) VALUES ($1)", content)
+	// Validate content
+	if content.Title == "" || content.Description == "" || content.ImageURL == "" {
+		log.Printf("Invalid content data received: %+v", content)
+		http.Error(w, "Content fields cannot be empty", http.StatusBadRequest)
+		return
+	}
+
+	// Insert content into the database
+	log.Printf("Inserting content into database: %+v", content)
+	_, err := db.Exec("INSERT INTO content (title, description, image_url) VALUES ($1, $2, $3)", content.Title, content.Description, content.ImageURL)
 	if err != nil {
+		log.Printf("Error inserting content into database: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	newContent := Content{
-		Text:      content,
-		Timestamp: time.Now(),
-	}
-	jsonContent, _ := json.Marshal(newContent)
+	// Publish the content to Redis
+	jsonContent, _ := json.Marshal(content)
+	log.Printf("Publishing content to Redis: %s", string(jsonContent))
 	err = redisClient.Publish(r.Context(), "new_content", jsonContent).Err()
 	if err != nil {
 		log.Printf("Error publishing to Redis: %v", err)
+		http.Error(w, "Error publishing content", http.StatusInternalServerError)
+		return
 	}
 
+	log.Printf("Content successfully handled: %+v", content)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 

@@ -66,6 +66,21 @@ const sliderSettings = {
   ]
 };
 
+// const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
+// const socket = new WebSocket(`${backendUrl.replace('https', 'wss')}/ws`);
+// const notifications = document.getElementById('notifications');
+// socket.onmessage = function (event) {
+//     const content = JSON.parse(event.data);
+//     notifications.style.display = 'block';
+//     notifications.innerHTML = `New content added: "${content.text}" at ${new Date(content.timestamp).toLocaleString()}`;
+//     const newItem = document.createElement('li');
+//     newItem.textContent = content.text;
+//     contentList.insertBefore(newItem, contentList.firstChild);
+//     setTimeout(() => {
+//         notifications.style.display = 'none';
+//     }, 10000);
+// };
+
 
 export default function Home() {
 
@@ -78,14 +93,19 @@ export default function Home() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Content submitted:', content);
+    console.log('Content submitted:', title, description, imageUrl);
     fetch('/api/submit', {
       method: 'POST',
-      body: content
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({title, description, imageUrl})
     }).then(response => {
       if (response.ok) {
         console.log('Content submitted successfully');
-        setContent('');
+        setTitle('');
+        setDescription('');
+        setImageUrl('');
       }
       else {
         console.error('Error submitting content');
